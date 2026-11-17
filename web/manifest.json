@@ -1,0 +1,11 @@
+{
+  "name": "Remédios do Dia",
+  "short_name": "Remédios",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#00796B",
+  "description": "Agenda de remédios para idosos, com compartilhamento da agenda do dia como imagem.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false
+}
