@@ -33,7 +33,8 @@ faça um site com dart e flutter sobre isso B) Gerenciar remédios para idosos. 
 | 6 | Telas: Hoje, Remédios, formulário (`pages/`, `widgets/agenda_card.dart`) | Concluída |
 | 7 | Testes unitários (`test/app_controller_test.dart`) | Escritos, **não executados** |
 | 8 | README e RELATORIO.md, `git init` e commits | Concluída |
-| 9 | Compilar, analisar e rodar o app | **Pendente — ver seção 5** |
+| 9 | Verificação estática possível sem Flutter: conferência de balanceamento de `()`, `{}` e `[]` em todos os `.dart` | Concluída — todos OK (não substitui `flutter analyze`) |
+| 10 | Compilar, analisar e rodar o app | **Pendente — ver seção 5** |
 
 ## 3. Configurações
 
