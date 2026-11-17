@@ -112,7 +112,8 @@ class _TodayPageState extends State<TodayPage> {
                             ? const SizedBox(
                                 width: 24,
                                 height: 24,
-                                child: CircularProgressIndicator(strokeWidth: 3),
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 3),
                               )
                             : const Icon(Icons.share_rounded, size: 28),
                         label: const Text(
@@ -133,30 +134,34 @@ class _TodayPageState extends State<TodayPage> {
 
   Future<void> _editName(BuildContext context) async {
     final controller = TextEditingController(text: widget.controller.elderName);
-    final name = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Nome do idoso'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: const TextStyle(fontSize: 20),
-          decoration: const InputDecoration(hintText: 'Ex.: Dona Maria'),
-          textCapitalization: TextCapitalization.words,
-          onSubmitted: (v) => Navigator.of(ctx).pop(v),
+    try {
+      final name = await showDialog<String>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Nome do idoso'),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            style: const TextStyle(fontSize: 20),
+            decoration: const InputDecoration(hintText: 'Ex.: Dona Maria'),
+            textCapitalization: TextCapitalization.words,
+            onSubmitted: (v) => Navigator.of(ctx).pop(v),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(controller.text),
+              child: const Text('Salvar'),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancelar'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(ctx).pop(controller.text),
-            child: const Text('Salvar'),
-          ),
-        ],
-      ),
-    );
-    if (name != null) await widget.controller.setElderName(name);
+      );
+      if (name != null) await widget.controller.setElderName(name);
+    } finally {
+      controller.dispose();
+    }
   }
 }

@@ -26,19 +26,47 @@ class AppController extends ChangeNotifier {
     medicines.clear();
     final medsRaw = prefs.getString(_kMeds);
     if (medsRaw != null) {
-      final list = jsonDecode(medsRaw) as List;
-      medicines.addAll(
-        list.map((e) => Medicine.fromJson(Map<String, dynamic>.from(e as Map))),
-      );
+      try {
+        final decoded = jsonDecode(medsRaw);
+        if (decoded is List) {
+          for (final item in decoded) {
+            if (item is Map) {
+              try {
+                medicines.add(
+                  Medicine.fromJson(
+                    Map<String, dynamic>.from(item),
+                  ),
+                );
+              } catch (_) {
+                // Ignora entradas inválidas sem impedir o carregamento dos demais.
+              }
+            }
+          }
+        } else {
+          await prefs.remove(_kMeds);
+        }
+      } catch (_) {
+        await prefs.remove(_kMeds);
+      }
     }
 
     _taken.clear();
     final takenRaw = prefs.getString(_kTaken);
     if (takenRaw != null) {
-      final map = jsonDecode(takenRaw) as Map<String, dynamic>;
-      map.forEach((day, keys) {
-        _taken[day] = (keys as List).cast<String>().toSet();
-      });
+      try {
+        final decoded = jsonDecode(takenRaw);
+        if (decoded is Map) {
+          decoded.forEach((day, keys) {
+            if (day is String && keys is List) {
+              _taken[day] = keys.whereType<String>().toSet();
+            }
+          });
+        } else {
+          await prefs.remove(_kTaken);
+        }
+      } catch (_) {
+        await prefs.remove(_kTaken);
+      }
     }
 
     loaded = true;
@@ -108,13 +136,14 @@ class AppController extends ChangeNotifier {
       final byTime = a.time.compareTo(b.time);
       return byTime != 0
           ? byTime
-          : a.medicine.name.toLowerCase().compareTo(b.medicine.name.toLowerCase());
+          : a.medicine.name
+              .toLowerCase()
+              .compareTo(b.medicine.name.toLowerCase());
     });
     return doses;
   }
 
-  static String dayKey(DateTime d) =>
-      '${d.year.toString().padLeft(4, '0')}-'
+  static String dayKey(DateTime d) => '${d.year.toString().padLeft(4, '0')}-'
       '${d.month.toString().padLeft(2, '0')}-'
       '${d.day.toString().padLeft(2, '0')}';
 }
